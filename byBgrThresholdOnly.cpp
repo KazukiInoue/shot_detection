@@ -16,7 +16,7 @@ void byBgrThresholdOnly() {
 	const int COLOR_TH = 100; // いい感じの閾値、モノクロには対応できない
 
 
-	for (int entireItr = 0; entireItr < 1; entireItr++) {
+	for (int entireItr = 0; entireItr < 3; entireItr++) {
 		//----------動画ファイルを開く----------
 		bool isTrain = true;
 		if (entireItr == 0) {
@@ -31,14 +31,12 @@ void byBgrThresholdOnly() {
 		string toDir = "";
 
 		if (isTrain) {
-			//videoDir = "../../src_data/OMV200/";
-
-			videoDir = "C:/Users/LAB/Videos/test/";
+			videoDir = "../../src_data/OMV200/";
 			toDir = "../../src_data/shots_OMV200/";
 		}
-		else {
-			videoDir = "../..recommendation_test/new_short_videos/dummy/";
-			toDir = "../../shot_detection/output_first_frames_of_shots/recommendation_test/";
+		else{
+			videoDir = "../../src_data/music_video/";
+			toDir = "../../src_data/shots_train/";
 		}
 
 		std::vector<std::string> videoList = Dir::read(videoDir);

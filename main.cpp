@@ -4,8 +4,9 @@ using namespace std;
 
 int main(int argc, char** argv) {
 
-	//byBgrThreshold();
-	//byColorThemes();
+	//byBgrThresholdOnly();
+
+	byBgrThresholdAndColorThemes();
 
 	//testExtractedColorInputPart();
 

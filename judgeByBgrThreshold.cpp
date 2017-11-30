@@ -20,8 +20,6 @@ void judgeByBgrThreshold(bool &isPossibleBoundary, cv::Mat nowFrame, cv::Mat pre
 		colorDiff += cv::mean(colorDiffMat[c])[0];
 	}
 
-	cout << colorDiff << endl;
-
 	// ショット検出された時の処理
 	if (colorDiff > diffThreshold) {
 		isPossibleBoundary = true;

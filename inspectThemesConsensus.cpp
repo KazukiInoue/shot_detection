@@ -36,14 +36,10 @@ void inspectThemesConsensus(bool &isBoundary, vector<vector<double>> nowColorThe
 			[&](int x, int y) {return colorDiffVec[x] < colorDiffVec[y]; }
 		);
 
-		cout << "minValue = " << colorDiffVec[index[0]] << endl;
-
 		if (colorDiffVec[index[0]] < colorThereshold) {
 			consensusCount += 1;
 		}
 	}
-
-	cout << "consensusCount = " << consensusCount << endl;
 
 	if (consensusCount < 10) {
 		isBoundary = true;
