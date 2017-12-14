@@ -18,32 +18,32 @@ void kMeansColorSubtraction(cv::Mat &dst, std::vector<std::vector<double>> &clus
 		cvTermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, /*iteration=*/10,/*epsilon=*/ 1.0),
 		1, cv::KMEANS_PP_CENTERS, centers);
 
-
-	cv::MatIterator_<cv::Vec3b> itd = dst.begin<cv::Vec3b>(), itd_end = dst.end<cv::Vec3b>();
-
 	vector<double> pixelNum(clusterNum, 0);
 	vector<vector<double>> posiCenter(clusterNum, vector<double>(2, 0));
 
-	for (int itr = 0; itd != itd_end; ++itd, ++itr) {
+	// 画像のクラスタリング
+	for (int y = 0; y < src.rows; y++) {
+		for (int x = 0; x < src.cols; x++) {
 
-		int label = clusters(itr); // label=0,1..,18,19
+			int label = clusters(x + y*src.rows);  // label = 0,1,...,18,19
 
-		// 後で使うクラスタの位置情報をここで収集
-		pixelNum[label] += 1.0;
+												   // 後で使うクラスタの位置情報をここで収集
+			pixelNum[label] += 1.0;
 
-		double x = itr % src.cols;
-		double y = (itr - x) / src.cols;
-		posiCenter[label][0] += x;
-		posiCenter[label][1] += y;
+			posiCenter[label][0] += x;
+			posiCenter[label][1] += y;
 
-		// 画素値をクラスタ中心値の色に置換
-		cv::Vec3f &bgr = centers.ptr<cv::Vec3f>(label)[0];
+			// 画素値をクラスタ中心値の色に置換
+			cv::Vec3f &bgr = centers.ptr<cv::Vec3f>(label)[0];
 
-		for (int c = 0; c < 3; c++) {
-			(*itd)[c] = cv::saturate_cast<uchar>(bgr[c]);
+			for (int c = 0; c < 3; c++) {
+				dst.ptr<cv::Vec3b>(y)[x][c] = cv::saturate_cast<uchar>(bgr[c]);
+			}
+
 		}
 	}
 
+	// クラスタリングの情報を収集
 	for (int clusterItr = 0; clusterItr < posiCenter.size(); clusterItr++) {
 
 		double x_center = posiCenter[clusterItr][0] / pixelNum[clusterItr];

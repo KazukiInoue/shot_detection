@@ -6,9 +6,9 @@ int main(int argc, char** argv) {
 
 	//byBgrThresholdOnly();
 
-	byBgrThresholdAndColorThemes();
+	// byBgrThresholdAndColorThemes();
 
-	//testExtractedColorInputPart();
+	testExtractedColorInputPart();
 
 
 	system("pause");

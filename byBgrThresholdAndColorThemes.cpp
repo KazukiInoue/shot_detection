@@ -11,58 +11,44 @@ void byBgrThresholdAndColorThemes() {
 	const int clusterNum = 20; /*5以上を指定してください*/
 	const int numToExtract = 20; /*clusterNum以下の値を指定してください*/
 
+	bool isTrain = true;
+	int indexValue = 1;
+
+	string videoDir[2] = {
+		"../../src_data/IMV133/",
+		"../../src_data/OMV200/"};
+
+	string toDir[2] = {
+		"../../src_data/shots_IMV133_threshold=130_themes=6/", 
+		"../../src_data/shots_OMV200_threshold=130_themes=6/"};
+
+
 	for (int entireItr = 0; entireItr < 1; entireItr++) {
 		//----------動画ファイルを開く----------
 
-		bool isTrain = true;
-		int indexValue = 1;
 
-		if (entireItr == 0) {
-			isTrain = true;
-			indexValue = 1;
-		}
-		else {
-			isTrain = false;
-			indexValue = 0;
-		}
-
-		string videoDir = "";
-		string toDir = "";
-
-		if (isTrain) {
-
-			videoDir = "../../src_data/OMV200/";
-			toDir = "../../src_data/shots_OMV200/";
-		}
-		else {
-			videoDir = "../../src_data/music_video/";
-			toDir = "../../src_data/shots_train/";
-		}
-
-		std::vector<std::string> videoList = Dir::read(videoDir);
+		std::vector<std::string> videoList = Dir::read(videoDir[entireItr]);
 
 		for (int vidItr = 0; vidItr < videoList.size(); vidItr++) {
 
-			string fileName;
-			stringstream tmp_fileName(videoList[vidItr]);
-			string tmp_string;
+			stringstream tmpFileName(videoList[vidItr]);
+			string tmpString;
 			vector<string> splitedFileName;
 
-			while (getline(tmp_fileName, tmp_string, '.')) {
-				splitedFileName.push_back(tmp_string);
+			while (getline(tmpFileName, tmpString, '.')) {
+				splitedFileName.push_back(tmpString);
 			}
-			fileName = splitedFileName[0];
 
 			if (splitedFileName.size() > 1) { //..というファイルが入力されることを防ぐ
 				if (splitedFileName[1] == "mp4") {
-					string videoFile = videoDir + videoList[vidItr];
+					string videoFile = videoDir[entireItr] + videoList[vidItr];
 
 					cout << videoFile << endl;
 					cv::VideoCapture cap(videoFile);
 
 					//ファイルがオープンできたかの確認
 					if (!cap.isOpened()) {
-						fprintf(stderr, "cap can't be opened!\n");
+						std::cerr << "cap can't be opened!" << endl;
 						exit(1);
 					}
 
@@ -74,14 +60,7 @@ void byBgrThresholdAndColorThemes() {
 					vector<vector<double>> preColorThemes(numToExtract, vector<double>(3, 0));
 					vector<vector<double>> nowColorThemes(numToExtract, vector<double>(3, 0));
 
-					string fileName;
-					stringstream tmp_fileName(videoList[vidItr]);
-					string tmp_string;
-					vector<string> splitedFileName;
-					while (getline(tmp_fileName, tmp_string, '.')) {
-						splitedFileName.push_back(tmp_string);
-					}
-					fileName = splitedFileName[0]; // video00001
+					string fileName= splitedFileName[0]; // video00001
 
 					/* 1フレーム目は保存
 					   2フレーム目以降でショット検出されたフレームを保存
@@ -94,7 +73,7 @@ void byBgrThresholdAndColorThemes() {
 							cap >> nowFrame;
 							cv::resize(nowFrame, nowFrame, cv::Size(), width / double(nowFrame.cols), height / double(nowFrame.rows));
 
-							//cv::imshow("video", nowFrame);
+							// cv::imshow("video", nowFrame);
 
 							// extract color themes
 							cv::Mat subtImg(nowFrame.size(), nowFrame.type());
@@ -107,7 +86,7 @@ void byBgrThresholdAndColorThemes() {
 							string frame2Name;
 							intValue2Name(frame2Name, frameItr + indexValue);
 							double elapsedSec = cap.get(cv::CAP_PROP_POS_MSEC) / 1000;
-							string outputName = toDir + fileName + "/" + fileName + "_" + frame2Name + "_" + to_string(elapsedSec) + ".png";
+							string outputName = toDir[entireItr] + fileName + "/" + fileName + "_" + frame2Name + "_" + to_string(elapsedSec) + ".png";
 							cv::imwrite(outputName, nowFrame);
 						}
 						//2フレーム目以降
@@ -123,6 +102,7 @@ void byBgrThresholdAndColorThemes() {
 							}
 
 							cv::resize(nowFrame, nowFrame, cv::Size(), width / double(nowFrame.cols), height / double(nowFrame.rows));
+
 							//cv::imshow("video", nowFrame);
 
 							// 1.前フレームとのBGRの値の差を計算し、閾値以上なら次の処理へ
@@ -146,15 +126,14 @@ void byBgrThresholdAndColorThemes() {
 									string frame2Name;
 									intValue2Name(frame2Name, frameItr + indexValue);
 									double elapsedSec = cap.get(cv::CAP_PROP_POS_MSEC) / 1000;
-									string outputName = toDir + fileName + "/" + fileName + "_" + frame2Name + "_" + to_string(elapsedSec) + ".png";
+									string outputName = toDir[entireItr] + fileName + "/" + fileName + "_" + frame2Name + "_" + to_string(elapsedSec) + ".png";
 									cv::imwrite(outputName, nowFrame);
-									std::cout << "detect!" << std::endl;
-									//cv::waitKey(0);
+									/*std::cout << "detect!" << std::endl;
+									cv::waitKey(0);*/
 								}
 							}
 
-				/*			cv::waitKey(30);
-							cout << "iteration: " << frameItr << " framenum: " << cap.get(CV_CAP_PROP_POS_FRAMES) << endl;*/
+							//cv::waitKey(30);
 
 						}
 

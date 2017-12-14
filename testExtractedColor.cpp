@@ -69,7 +69,6 @@ void testShowExtractedColorThemes(vector<vector<vector<double>>> &selectedAllIma
 		kMeansColorSubtraction(/*&*/subtImg, /*&*/clusterInfo, src, clusterNum);
 		selectPrincipalColorThemes(/*&*/colorThemes, subtImg, clusterNum, numToExtract, clusterInfo);
 
-
 		// ‘S‰æ‘œ‚ÌcolorTheme‚ğˆê‚Â‚Ìvector‚ÉŠi”[
 		selectedAllImagesThemes[imgItr] = colorThemes;
 
@@ -101,6 +100,8 @@ void testShowExtractedColorThemes(vector<vector<vector<double>>> &selectedAllIma
 		cv::namedWindow("selected Color in image:" + to_string(imgItr), CV_WINDOW_FREERATIO);
 		cv::imshow("selected Color in image:" + to_string(imgItr), combinedColor);
 		cv::imshow("image:" + to_string(imgItr), src);
+
+		cv::imwrite("themes" + to_string(imgItr) + ".png", combinedColor);
 	}
 
 	cv::waitKey(0);
@@ -112,8 +113,10 @@ void testExtractedColorInputPart() {
 	const int numToExtract = 20; /*clusterNumˆÈ‰º‚Ì’l‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢*/
 
 	vector<string> imgPath;
-	imgPath.push_back("../test_images/frame1.jpg");
-	imgPath.push_back("../test_images/frame2.jpg");
+	imgPath.push_back("../test_images/mistake1.png");
+	imgPath.push_back("../test_images/mistake1.png");
+	imgPath.push_back("../test_images/mistake1.png");
+	imgPath.push_back("../test_images/mistake1.png");
 
 	// ‘S‚Ä‚Ì‰æ‘œ‚Å“¾‚ç‚ê‚écolorTheme@•Ï”–¼‚ª•¡G‚É‚È‚Á‚Ä‚«‚½‚Ì‚ÅC³‚·‚é
 	vector<vector<vector<double>>> selectedAllImagesThemes(imgPath.size(), vector<vector<double>>(numToExtract, vector<double>(3, 0)));

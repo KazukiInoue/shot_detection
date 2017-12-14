@@ -2,7 +2,7 @@
 
 void judgeByBgrThreshold(bool &isPossibleBoundary, cv::Mat nowFrame, cv::Mat preFrame) {
 
-	const int diffThreshold = 100; // いい感じの閾値、モノクロには対応できない
+	const int diffThreshold = 130; // いい感じの閾値、モノクロには対応できない
 
 	cv::Mat nowChannels[3];
 	cv::Mat preChannels[3];
@@ -19,6 +19,8 @@ void judgeByBgrThreshold(bool &isPossibleBoundary, cv::Mat nowFrame, cv::Mat pre
 		//画素値の総和/画素数 = 画素値の平均値
 		colorDiff += cv::mean(colorDiffMat[c])[0];
 	}
+
+	// cout << "colorDiff = " << colorDiff << endl;
 
 	// ショット検出された時の処理
 	if (colorDiff > diffThreshold) {

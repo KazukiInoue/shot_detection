@@ -7,7 +7,7 @@ void inspectThemesConsensus(bool &isBoundary, vector<vector<double>> nowColorThe
 	const int colorThemesNum = nowColorThemes.size();
 
 	int consensusCount = 0;
-	const int colorThereshold = 200; /*同じ色だと見なせるいい感じの閾値*/
+	const int colorThereshold = 300; /*同じ色だと見なせるいい感じの閾値*/
 	const int countThreshold = 10;   /*同じcolor themesだと見なせるいい感じの閾値*/
 
 	// color themesの一致度を調べる
@@ -41,7 +41,9 @@ void inspectThemesConsensus(bool &isBoundary, vector<vector<double>> nowColorThe
 		}
 	}
 
-	if (consensusCount < 10) {
+	// cout << "consensusCount = " << consensusCount << endl;
+
+	if (consensusCount < 6) {
 		isBoundary = true;
 	}
 	else {
